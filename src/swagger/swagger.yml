@@ -1,0 +1,205 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Library API"
+  description: "API for borrowing book"
+host: localhost:3001
+basePath: /api
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+
+paths:
+  /borrow-book:
+    post:
+      summary: Borrow a book
+      tags:
+        - Transaction
+      parameters:
+        - in: body
+          name: borrow book payload
+          required: true
+          schema:
+            $ref: "#/definitions/BorrowBookPayload"
+      responses:
+        200:
+          description: Success message
+          schema:
+            $ref: "#/definitions/BorrowBookSuccessResponse"
+        400:
+          description: Error message
+          schema:
+            $ref: "#/definitions/BorrowBookErrorResponse"
+            
+  /return-book:
+    post:
+      summary: "Return a book"
+      tags:
+        - Transaction
+      parameters:
+        - in: body
+          name: "return book payload"
+          required: true
+          schema:
+            $ref: "#/definitions/ReturnBookPayload"
+      responses:
+        200:
+          description: Success message
+          schema:
+            $ref: "#/definitions/ReturnBookSuccessResponse"
+        400:
+          description: Error message
+          schema:
+            $ref: "#/definitions/ReturnBookErrorResponse"
+
+  /members:
+    post:
+      summary: Add Batch of Members
+      tags:
+        - Members
+      parameters:
+        - in: body
+          name: members
+          required: true
+          schema:
+            $ref: "#/definitions/AddBatchMembersPayload"
+
+      responses:
+        200:
+          description: List of new members
+          schema:
+            $ref: "#/definitions/AddBatchMembersSuccessResponse"
+        400:
+          description: Error message
+          schema:
+            $ref: "#/definitions/AddBatchMembersErrorResponse"
+    get:
+      tags:
+        - Members
+      summary: Get all members
+      responses:
+        200:
+          description: List of members
+          schema:
+            $ref: "#/definitions/AddBatchMembersSuccessResponse"
+
+  /books:
+    post:
+      summary: Add Batch of Books
+      tags:
+        - Books
+      parameters:
+        - in: body
+          name: books
+          required: true
+          schema:
+            $ref: "#/definitions/AddBatchBooksPayload"
+
+      responses:
+        200:
+          description: List of new books
+          schema:
+            $ref: "#/definitions/AddBatchBooksSuccessResponse"
+        400:
+          description: Error message
+          schema:
+            $ref: "#/definitions/AddBatchBooksErrorResponse"
+    get:
+      tags:
+        - Books
+      summary: Get all books
+      responses:
+        200:
+          description: List of books
+          schema:
+            $ref: "#/definitions/AddBatchBooksSuccessResponse"
+            
+ 
+definitions:
+  BorrowBookPayload:
+    type: object
+    properties: 
+      member_code:
+        type: string
+        example: M001
+      book_code: 
+        type: string
+        example: SHR-1
+  BorrowBookSuccessResponse:
+    type: object
+    properties: 
+      message:
+        type: string
+        example: Book borrowed successfully
+  BorrowBookErrorResponse:
+    type: object
+    properties: 
+      error:
+        type: string
+        example: Book is not available
+
+  ReturnBookPayload:
+    type: object
+    properties: 
+      member_code:
+        type: string
+        example: M001
+      book_code: 
+        type: string
+        example: SHR-1
+  ReturnBookSuccessResponse:
+    type: object
+    properties: 
+      message:
+        type: string
+        example: Book returned successfully
+  ReturnBookErrorResponse:
+    type: object
+    properties: 
+      error:
+        type: string
+        example: This book was not borrowed by this member
+
+  AddBatchMembersPayload:
+    type: array
+    items:
+      type: object
+      properties: 
+        member_code:
+          type: string
+          example: M001
+        name:
+          type: string
+          example: Angga
+  AddBatchMembersSuccessResponse:
+    $ref: "#/definitions/AddBatchMembersPayload"
+  AddBatchMembersErrorResponse:
+    type: object
+    properties: 
+      error:
+        type: string
+        example: "Member validation failed: name: Path `name` is required., code: Path `code` is required."
+
+  AddBatchBooksPayload:
+    type: array
+    items:
+      type: object
+      properties: 
+        member_code:
+          type: string
+          example: M001
+        book_code:
+          type: string
+          example: SHR-1
+  AddBatchBooksSuccessResponse:
+    $ref: "#/definitions/AddBatchBooksPayload"
+  AddBatchBooksErrorResponse:
+    type: object
+    properties: 
+      error:
+        type: string
+        example: "Duplicate key"
+

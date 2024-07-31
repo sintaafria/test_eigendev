@@ -3,11 +3,12 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const connectDB = require('./src/infra/database');
 const libraryRoutes = require('./src/app/routes/LibraryRoutes');
+const swagger = require('./src/swagger');
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3001;
 
 connectDB()
 
@@ -18,10 +19,14 @@ app.get("/", (req, res) => {
 });
 app.use('/api', libraryRoutes);
 
+swagger(app)
+
 app.use(function(req, res) {
-    console.log(res.status)
     res.status(404);
     res.json({ error: 'Not found' });
   });
 
-app.listen(PORT, () => console.log(`Server running at port: ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`)
+  console.log(`Swagger available at http://localhost: ${PORT}/api-docs`)
+});
