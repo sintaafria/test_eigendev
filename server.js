@@ -12,11 +12,11 @@ app.get("/", (req, res) => {
 });
 app.use('/api', libraryRoutes);
 
+swagger(app)
+
 app.use(async function(req, res) {
   res.status(404);
   res.json({ error: 'Not found' });
 });
-
-swagger(app)
 
 module.exports = app;
